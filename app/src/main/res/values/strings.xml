@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RedX</string>
+    <string name="widget_name">RedX Quick Chat</string>
+
+    <!-- Pairing Screen -->
+    <string name="pair_title">Connect to Server</string>
+    <string name="pair_subtitle">Scan QR code or enter server address manually</string>
+    <string name="pair_host_hint">Server address (e.g. 192.168.1.100:4096)</string>
+    <string name="pair_token_hint">Auth token (optional)</string>
+    <string name="pair_connect">Connect</string>
+    <string name="pair_scan_qr">Scan QR Code</string>
+    <string name="pair_manual">Enter Manually</string>
+
+    <!-- Chat -->
+    <string name="chat_input_hint">Message…</string>
+    <string name="chat_empty_title">Start a conversation</string>
+    <string name="chat_empty_subtitle">Ask anything — RedX connects you to powerful AI models</string>
+    <string name="new_session">New Chat</string>
+    <string name="sessions">Sessions</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_server">Server</string>
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_sounds">Sounds &amp; Haptics</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_about">About</string>
+    <string name="settings_disconnect">Disconnect</string>
+    <string name="settings_host">Server Host</string>
+    <string name="settings_port">Port</string>
+    <string name="settings_haptics">Enable Haptics</string>
+    <string name="settings_sounds_toggle">Enable Sound Effects</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_font_size">Message Font Size</string>
+    <string name="version_info">RedX v%1$s</string>
+
+    <!-- Errors -->
+    <string name="error_no_connection">Cannot connect to server</string>
+    <string name="error_timeout">Connection timed out</string>
+    <string name="error_generic">Something went wrong</string>
+    <string name="retry">Retry</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="connect">Connect</string>
+
+    <!-- Voice -->
+    <string name="voice_call_title">Voice Call</string>
+    <string name="voice_call_subtitle">AI is listening…</string>
+    <string name="voice_dictation">Dictation mode</string>
+    <string name="voice_end_call">End Call</string>
+    <string name="voice_mute">Mute</string>
+
+    <!-- Models -->
+    <string name="model_picker_title">Select Model</string>
+    <string name="model_search_hint">Search models…</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_voice">Voice Call</string>
+    <string name="notification_channel_dictation">Dictation</string>
+    <string name="notification_channel_messages">Messages</string>
+    <string name="notification_dictation_title">Recording dictation</string>
+    <string name="notification_voice_title">Voice call active</string>
+
+    <!-- Permissions -->
+    <string name="permission_camera_title">Camera Permission</string>
+    <string name="permission_camera_body">Camera access is needed to scan QR codes for pairing</string>
+    <string name="permission_mic_title">Microphone Permission</string>
+    <string name="permission_mic_body">Microphone access is needed for voice calls and dictation</string>
+    <string name="permission_grant">Grant</string>
+    <string name="permission_deny">Not Now</string>
+</resources>

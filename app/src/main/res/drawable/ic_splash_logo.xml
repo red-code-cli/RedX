@@ -1,0 +1,24 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- RedX "RX" monogram on dark background -->
+    <path
+        android:fillColor="#161616"
+        android:pathData="M0,0h108v108H0z" />
+    <!-- Hexagon outline -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#0A84FF"
+        android:strokeWidth="3"
+        android:pathData="M54,10 L90,30 L90,70 L54,90 L18,70 L18,30 Z" />
+    <!-- R letter -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M34,36 L34,72 L40,72 L40,56 L50,56 L58,72 L65,72 L57,55 Q62,52 62,46 Q62,36 50,36 Z M40,42 L50,42 Q56,42 56,46 Q56,50 50,50 L40,50 Z" />
+    <!-- X letter -->
+    <path
+        android:fillColor="#0A84FF"
+        android:pathData="M66,36 L74,36 L80,46 L86,36 L94,36 L84,54 L94,72 L86,72 L80,62 L74,72 L66,72 L76,54 Z" />
+</vector>
