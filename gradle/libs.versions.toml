@@ -4,8 +4,7 @@ kotlin = "2.1.0"
 ksp = "2.1.0-1.0.29"
 hilt = "2.54"
 compose-bom = "2024.12.01"
-navigation3 = "1.0.0-alpha04"
-room = "2.7.0"
+room = "2.6.1"
 datastore = "1.1.1"
 okhttp = "4.12.0"
 coil = "3.0.4"
@@ -34,10 +33,6 @@ compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-material-icons = { group = "androidx.compose.material", name = "material-icons-extended" }
 compose-animation = { group = "androidx.compose.animation", name = "animation" }
 compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
-
-# Navigation 3
-navigation3-compose = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = "navigation3" }
-navigation3-runtime = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "navigation3" }
 
 # Room
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }

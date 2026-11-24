@@ -4,12 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.redx.codex.data.local.DraftDao
 import com.redx.codex.data.local.DraftEntity
+import com.redx.codex.data.local.PreferencesManager
 import com.redx.codex.data.network.WebSocketManager
 import com.redx.codex.data.network.WsEvent
 import com.redx.codex.data.network.WsEventType
 import com.redx.codex.data.network.WsState
 import com.redx.codex.data.repository.MessageRepository
 import com.redx.codex.domain.model.*
+import com.redx.codex.util.HapticManager
+import com.redx.codex.util.SoundManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -26,6 +29,8 @@ data class ChatUiState(
     val wsState: WsState = WsState.Disconnected,
     val selectedModel: Model? = null,
     val showModelPicker: Boolean = false,
+    val soundEffects: Boolean = true,
+    val hapticFeedback: Boolean = true,
 )
 
 @HiltViewModel
@@ -33,6 +38,9 @@ class ChatViewModel @Inject constructor(
     private val messageRepo: MessageRepository,
     private val wsManager: WebSocketManager,
     private val draftDao: DraftDao,
+    private val prefs: PreferencesManager,
+    private val soundManager: SoundManager,
+    private val hapticManager: HapticManager,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ChatUiState())
@@ -41,6 +49,19 @@ class ChatViewModel @Inject constructor(
     private var currentSessionId: String? = null
     private var wsJob: Job? = null
     private var streamingBuffer = StringBuilder()
+
+    init {
+        viewModelScope.launch {
+            prefs.settings.collect { settings ->
+                _uiState.update {
+                    it.copy(
+                        soundEffects = settings.soundEffects,
+                        hapticFeedback = settings.hapticFeedback,
+                    )
+                }
+            }
+        }
+    }
 
     fun init(sessionId: String, model: Model?) {
         currentSessionId = sessionId
@@ -115,10 +136,12 @@ class ChatViewModel @Inject constructor(
 
             WsEventType.SESSION_MESSAGE_DONE -> {
                 streamingBuffer.clear()
+                if (_uiState.value.soundEffects) soundManager.playReplyDone()
+                if (_uiState.value.hapticFeedback) hapticManager.doubleClick()
+
                 val updatedMsg = event.message
                 if (updatedMsg != null) {
                     viewModelScope.launch {
-                        // Server sends final message, sync it
                         runCatching { messageRepo.syncMessages(sid) }
                     }
                 }
@@ -127,13 +150,15 @@ class ChatViewModel @Inject constructor(
 
             WsEventType.SESSION_ERROR -> {
                 streamingBuffer.clear()
+                if (_uiState.value.soundEffects) soundManager.playError()
+                if (_uiState.value.hapticFeedback) hapticManager.error()
                 _uiState.update {
                     it.copy(isStreaming = false, error = event.error ?: "Stream error")
                 }
             }
 
             WsEventType.SESSION_TOOL_CALLED -> {
-                // Show tool call card in UI
+                if (_uiState.value.soundEffects) soundManager.playNeedsInput()
                 val msgId = event.messageId ?: return
                 _uiState.update { state ->
                     val msgs = state.messages.toMutableList()
@@ -157,6 +182,9 @@ class ChatViewModel @Inject constructor(
         val sid = currentSessionId ?: return
         if (text.isBlank()) return
 
+        if (_uiState.value.soundEffects) soundManager.playSend()
+        if (_uiState.value.hapticFeedback) hapticManager.click()
+
         val optimisticMsg = Message(
             id = UUID.randomUUID().toString(),
             sessionId = sid,
@@ -176,13 +204,13 @@ class ChatViewModel @Inject constructor(
                 messageRepo.sendMessage(sid, text.trim(), _uiState.value.selectedModel?.id)
             }.onFailure { e ->
                 _uiState.update { it.copy(isStreaming = false, error = e.message) }
-                // Enqueue for retry when offline
                 messageRepo.enqueueOutbox(sid, optimisticMsg)
             }
         }
     }
 
     fun interruptStreaming() {
+        if (_uiState.value.hapticFeedback) hapticManager.heavyClick()
         viewModelScope.launch {
             currentSessionId?.let {
                 runCatching { messageRepo.interruptSession(it) }
@@ -204,10 +232,12 @@ class ChatViewModel @Inject constructor(
     }
 
     fun selectModel(model: Model) {
+        if (_uiState.value.hapticFeedback) hapticManager.click()
         _uiState.update { it.copy(selectedModel = model, showModelPicker = false) }
     }
 
     fun toggleModelPicker() {
+        if (_uiState.value.hapticFeedback) hapticManager.click()
         _uiState.update { it.copy(showModelPicker = !it.showModelPicker) }
     }
 

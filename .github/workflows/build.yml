@@ -30,15 +30,14 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Setup Keystore
-        id: setup_keystore
+      - name: Setup Release Keystore
         run: |
+          mkdir -p app
           if [ -n "${{ secrets.KEYSTORE_BASE64 }}" ]; then
             echo "Decoding release keystore from secrets..."
             echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app/keystore.jks
-            echo "has_keystore=true" >> $GITHUB_OUTPUT
           else
-            echo "No custom keystore provided. Creating a standalone release keystore..."
+            echo "No custom keystore secret found. Generating automated release keystore..."
             keytool -genkeypair -v \
               -keystore app/keystore.jks \
               -alias redx-release \
@@ -48,23 +47,18 @@ jobs:
               -storepass "redxpassword123" \
               -keypass "redxpassword123" \
               -dname "CN=RedX, OU=Engineering, O=RedX, L=San Francisco, ST=CA, C=US"
-            echo "has_keystore=true" >> $GITHUB_OUTPUT
-            echo "KEYSTORE_PASSWORD=redxpassword123" >> $GITHUB_ENV
-            echo "KEY_ALIAS=redx-release" >> $GITHUB_ENV
-            echo "KEY_PASSWORD=redxpassword123" >> $GITHUB_ENV
           fi
+          echo "KEYSTORE_PASSWORD=redxpassword123" >> $GITHUB_ENV
+          echo "KEY_ALIAS=redx-release" >> $GITHUB_ENV
+          echo "KEY_PASSWORD=redxpassword123" >> $GITHUB_ENV
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
 
-      - name: Build with Gradle
+      - name: Build Release APK with Gradle
         run: |
           ./gradlew assembleRelease \
             --stacktrace \
-            --no-daemon \
-            -Pandroid.injected.signing.store.file=keystore.jks \
-            -Pandroid.injected.signing.store.password=${{ env.KEYSTORE_PASSWORD || secrets.KEYSTORE_PASSWORD }} \
-            -Pandroid.injected.signing.key.alias=${{ env.KEY_ALIAS || secrets.KEY_ALIAS }} \
-            -Pandroid.injected.signing.key.password=${{ env.KEY_PASSWORD || secrets.KEY_PASSWORD }}
+            --no-daemon
 
       - name: Locate APK
         id: find_apk
@@ -77,11 +71,12 @@ jobs:
           fi
           echo "Found APK at: $APK_PATH"
           echo "apk_path=$APK_PATH" >> $GITHUB_OUTPUT
+          ls -lh "$APK_PATH"
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: RedX-APK
+          name: RedX-Release-APK
           path: ${{ steps.find_apk.outputs.apk_path }}
           retention-days: 30
 

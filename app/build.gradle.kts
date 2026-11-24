@@ -28,9 +28,9 @@ android {
         create("release") {
             // These env vars are set in GitHub Actions secrets
             storeFile = file(System.getenv("KEYSTORE_PATH") ?: "keystore.jks")
-            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: ""
-            keyAlias = System.getenv("KEY_ALIAS") ?: ""
-            keyPassword = System.getenv("KEY_PASSWORD") ?: ""
+            storePassword = System.getenv("KEYSTORE_PASSWORD")?.takeIf { it.isNotBlank() } ?: "redxpassword123"
+            keyAlias = System.getenv("KEY_ALIAS")?.takeIf { it.isNotBlank() } ?: "redx-release"
+            keyPassword = System.getenv("KEY_PASSWORD")?.takeIf { it.isNotBlank() } ?: "redxpassword123"
         }
     }
 
@@ -100,10 +100,6 @@ dependencies {
     implementation(libs.compose.material.icons)
     implementation(libs.compose.animation)
     implementation(libs.compose.foundation)
-
-    // Navigation 3
-    implementation(libs.navigation3.compose)
-    implementation(libs.navigation3.runtime)
 
     // Room
     implementation(libs.room.runtime)
