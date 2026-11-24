@@ -3,6 +3,7 @@ package com.redx.codex.ui.screens.pairing
 import android.util.Patterns
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -252,7 +253,3 @@ private fun textFieldColors() = OutlinedTextFieldDefaults.colors(
     unfocusedTextColor = OnBackground,
 )
 
-// Make Box clickable
-private fun Modifier.clickable(onClick: () -> Unit) = this.then(
-    Modifier.clickable(onClick = onClick)
-)

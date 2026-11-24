@@ -90,7 +90,7 @@ fun ChatScreen(
             }
 
             // Scroll to bottom FAB
-            AnimatedVisibility(
+            androidx.compose.animation.AnimatedVisibility(
                 visible = !listState.isScrolledToEnd(),
                 enter = fadeIn() + scaleIn(),
                 exit = fadeOut() + scaleOut(),
@@ -112,7 +112,7 @@ fun ChatScreen(
         }
 
         // Error banner
-        AnimatedVisibility(state.error != null) {
+        AnimatedVisibility(visible = state.error != null) {
             Surface(color = AccentRed.copy(alpha = 0.15f)) {
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
